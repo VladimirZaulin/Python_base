@@ -13,22 +13,25 @@ from simple_draw import snowflake, random_number
 N = 20
 
 def flying_snowflakes(length=20):
+    sd.start_drawing()
     flakes_box = []
     while len(flakes_box) < length:
         flakes_box.append(sd.random_number(10,50))
     for length in flakes_box:
-        print(length)
-        x = sd.random_number(50,750)
-        y = 450
+        x = sd.random_number(50, 750)
+        y = 600
         while True:
-            sd.clear_screen()
             point = sd.get_point(x, y)
-            sd.snowflake(center=point, length=length)
+            sd.snowflake(center=point, length=length, color=sd.COLOR_WHITE)
+            sd.snowflake(center=point, length=length, color=sd.background_color)
             y -= 10
-            if y < 50:
+            if y < 20:
                 break
-            x += 0 + sd.random_number(-5,15)
+            x += 0 + sd.random_number(-10,10)
+            point = sd.get_point(x, y)
+            sd.snowflake(center=point, length=length, color=sd.COLOR_WHITE)
             sd.sleep(0.1)
+            sd.finish_drawing()
             if sd.user_want_exit():
                 return
 
