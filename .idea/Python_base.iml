@@ -2,6 +2,7 @@
 <module type="PYTHON_MODULE" version="4">
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/lesson_005/Painting" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/lesson_005/district" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/lesson_005/district/central_street" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/lesson_005/district/central_street/house1" isTestSource="false" />
