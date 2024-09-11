@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+from mastermind_engine import generate_number, check_number
+from termcolor import cprint, COLORS
+
 
 # Игра «Быки и коровы»
 # https://goo.gl/Go2mb9
@@ -23,7 +26,7 @@
 
 # Составить отдельный модуль mastermind_engine, реализующий функциональность игры.
 # В этом модуле нужно реализовать функции:
-#   загадать_число()
+#   загадать_число() +
 #   проверить_число(NN) - возвращает словарь {'bulls': N, 'cows': N}
 # Загаданное число хранить в глобальной переменной.
 # Обратите внимание, что строки - это список символов.
@@ -43,4 +46,30 @@
 # Это пример применения SOLID принципа (см https://goo.gl/GFMoaI) в архитектуре программ.
 # Точнее, в этом случае важен принцип единственной ответственности - https://goo.gl/rYb3hT
 
-# TODO здесь ваш код...
+
+def game_of_bulls():
+    cprint('Привет, угадай какие 4 цифры я загадал!')
+    print('Если угадаешь число и его место я дам тебе быка')
+    print('Если если одно из твоих чисел включает и мое, за каждую такую дам тебе корову')
+    cprint('Введи 4-х значное число:')
+    generate_number()
+    bulls, cows = check_number()
+    print('Быки -', bulls,'Коровы -', cows)
+    while bulls < 4:
+        print('Так близко!')
+        bulls, cows = check_number()
+        print('Быки -', bulls,'Коровы -', cows)
+    else:
+        cprint('Вы победили! Хотите ещё разок? Да/Нет', color="light_green")
+        user_input = input()
+        if user_input == 'Да' or user_input == 'да' or user_input == 'ок' or user_input == 'ok':
+            game_of_bulls()
+        else:
+            cprint('Спасибо за игру, пока!',color="light_magenta",on_color='on_light_yellow')
+            quit()
+
+
+
+
+
+game_of_bulls()
