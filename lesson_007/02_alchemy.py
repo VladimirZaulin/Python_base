@@ -30,9 +30,9 @@ class Water:
         return ('Вода плещется в озерке, её температура {} градусов, '
                 'загрязнена на {} процентов, наносит {} урона, {} притяжения к земле'.format(
             self.temperature, self.dirtiness, self.damage, self.gravity))
-    # def __add__(self, other):
-    #     if other == Air():
-    #         return Storm.__str__
+    def __add__(self, other):
+        if isinstance(self, Air):
+            return Storm.__str__
 class Air:
     def __init__(self):
         self.temperature = 16
@@ -43,8 +43,9 @@ class Air:
         return ('Воздух не плох в этих местах, температура {} градусов, '
                 'загрязнен на {} процентов, наносит {} урона, {} притяжения к земле'.format(
             self.temperature, self.dirtiness, self.damage, self.gravity))
-    # def __add__(self, other):
-    #     return
+    def __radd__(self, other):
+         if isinstance(self, Water):
+             return Storm.__str__
 class Fire:
     def __init__(self):
         self.temperature = 500
