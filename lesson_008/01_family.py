@@ -79,16 +79,16 @@ class Husband:
         pass
 
     def __str__(self):
-        return '{} сыт на {}, весел на {}'.format(self.name,self.energy, self.joy)
+        return f'           {self.name}: сытость - {self.energy}, веселье - {self.joy}'
 
     def act(self):
         self.house.spoiling(self)
         if self.energy <= 0:
             print('{} скончался от голода'.format(self.name))
-            return
+            return True
         if self.joy <= 0:
             print('{} скончался от тоски'.format(self.name))
-            return
+            return True
         if self.energy <= 10:
             self.eat()
         elif self.house.money <= 90:
@@ -114,7 +114,7 @@ class Husband:
             self.energy += 30
             self.house.total_food += 30
             self.house.food -= 30
-        elif self.house.food > 0 < 30:
+        elif 0 < self.house.food < 30:
             self.energy +=self.house.food
             self.house.total_food += self.house.food
             self.house.food *= 0
@@ -162,10 +162,10 @@ class Wife(Husband):
         self.house.spoiling(self)
         if self.energy <= 0:
             print('{} скончалась от голода'.format(self.name))
-            return
+            return True
         if self.joy <= 0:
             print('{} скончалась от тоски'.format(self.name))
-            return
+            return True
         if self.energy <= 10:
             self.eat()
         elif self.house.food <= 90:
@@ -191,16 +191,19 @@ class Wife(Husband):
             self.energy += 10
             self.house.total_food += 10
             self.house.food -= 10
-        super()
+        # super().eat()
     def shopping(self):
         if self.house.money >= 90:
             print('{} принесла покушать'.format(self.name))
             self.house.money -= 90
             self.house.food +=90
-        elif self.house.money < 90:
-            print(f'{self.name} : где деньги? У нас есть не на что')
+        elif 30 <= self.house.money < 90:
+            print(self.name, "купила немного еды, пора бы уже поработать, дорогой")
             self.house.money -= 30
             self.house.food += 30
+        elif self.house.money < 90:
+            print(f'{self.name} : где деньги? У нас есть не на что')
+
 
     def buy_fur_coat(self):
         if self.house.money >= 350:
@@ -219,7 +222,7 @@ class Wife(Husband):
         self.house.dirt -= 100
         self.energy -= 10
         if self.house.dirt < 0:
-            self.house.dirt *= 0
+            self.house.dirt = 0
 
 
 home = House()
@@ -232,6 +235,8 @@ for day in range(365):
     cprint('================== День {} =================='.format(day), color='red')
     serge.act()
     masha.act()
+    if serge.act() or masha.act():
+        break
     cprint(serge, color='cyan')
     cprint(masha, color='cyan')
     cprint(home, color='cyan')
