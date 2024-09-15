@@ -49,6 +49,7 @@ class House:
         self.money = 100
         self.food = 50
         self.dirt = 0
+        self.cat_food = 30
         self.total_money = 0
         self.total_food = 0
         self.total_coats = 0
@@ -125,6 +126,10 @@ class Husband:
         print('{} поиграл катку в WoT'.format(self.name))
         self.energy -= 10
         self.joy += 20
+    def take_cat(self, house, other):
+        Cat.house = self.house
+        self.fullness -= 10
+        print('{} Взял домой котика, по имени {}'.format(self.name,other.name))
 
 
 class Wife(Husband):
@@ -244,20 +249,49 @@ class Cat:
     # есть,
     #   спать,
     #   драть обои
-    def __init__(self):
-        pass
+    def __init__(self, name):
+        self.name = name
+        self.fullness = 30
+        self.house = None
 
-    def act(self):
-        pass
+    def __str__(self):
+        return f'Я котик-{self.name} моя сытость - {self.fullness}'
 
     def eat(self):
-        pass
-
-    def sleep(self):
-        pass
+        if self.house.cat_food >= 10:
+            print('{} поел'.format(self.name))
+            self.fullness += 20
+            self.house.cat_food -= 10
+        else:
+            print('{} нет еды'.format(self.name))
 
     def soil(self):
-        pass
+        print('{} порвал обои'.format(self.name))
+        self.house.dirt += 5
+        self.fullness -= 10
+
+    def sleep(self):
+        print('{} мяу, мяу, пора баиньки zzz...'.format(self.name))
+        self.fullness -= 10
+
+    def act(self):
+        dice = randint(1, 6)
+        if self.fullness <= 0:
+            print('{} умер...'.format(self.name))
+            return
+        if self.fullness <= 10:
+            self.eat()
+        elif self.house.dirt == 0:
+            self.play()
+        elif self.house.money < 50:
+            self.sleep()
+        elif dice == 1:
+            self.play()
+        elif dice == 2:
+            self.eat()
+        else:
+            self.sleep()
+
 
 
 ######################################################## Часть вторая бис
