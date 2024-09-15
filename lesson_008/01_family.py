@@ -103,7 +103,7 @@ class Husband:
         elif 0 < self.house.food < 30:
             self.energy +=self.house.food
             self.house.total_food += self.house.food
-            self.house.food *= 0
+            self.house.food = 0
             print('Без обид, но я - {}, я - доем'.format(self.name))
         else:
             print('{} : Нет еды! Купитее'.format(self.name))
@@ -332,7 +332,6 @@ class Child(Husband):
             print('{} поел'.format(self.name))
             self.energy += 10
             self.house.food -= 10
-        super().eat()
 
 
 home = House()
