@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from encodings import search_function
+from time import sleep
 
 from termcolor import cprint
 from random import randint
@@ -144,6 +145,10 @@ class Husband:
         self.energy -= 10
         self.joy += 20
 
+    def sleep(self):
+        print(f'{self.name} спят усталые игрушки, книжки спят')
+        self.energy -= 10
+
 
 class Wife(Husband):
 
@@ -274,22 +279,22 @@ print('За год куплено',home.total_coats, 'шуб')
 # Если кот дерет обои, то грязи становится больше на 5 пунктов
 
 
-class Cat:
-
-    def __init__(self):
-        pass
-
-    def act(self):
-        pass
-
-    def eat(self):
-        pass
-
-    def sleep(self):
-        pass
-
-    def soil(self):
-        pass
+# class Cat:
+#
+#     def __init__(self):
+#         pass
+#
+#     def act(self):
+#         pass
+#
+#     def eat(self):
+#         pass
+#
+#     def sleep(self):
+#         pass
+#
+#     def soil(self):
+#         pass
 
 
 ######################################################## Часть вторая бис
@@ -303,22 +308,29 @@ class Cat:
 # отличия от взрослых - кушает максимум 10 единиц еды,
 # степень счастья  - не меняется, всегда ==100 ;)
 
-class Child:
+class Child(Husband):
 
     def __init__(self):
-        pass
-
+        super().__init__()
+        self.joy = 100
     def __str__(self):
         return super().__str__()
-
     def act(self):
-        pass
-
+        if self.energy <= 0:
+            print('{} смерть от голода'.format(self.name))
+            return True
+        if self.energy <= 10:
+            self.eat()
+        else:
+            self.sleep()
     def eat(self):
-        pass
+        if self.house.food >= 10:
+            print('{} поел'.format(self.name))
+            self.energy += 10
+            self.house.food -= 10
+        super().eat()
 
-    def sleep(self):
-        pass
+
 
 
 # TODO после реализации второй части - отдать на проверку учителем две ветки
@@ -335,18 +347,18 @@ home = House()
 serge = Husband(name='Сережа')
 masha = Wife(name='Маша')
 kolya = Child(name='Коля')
-murzik = Cat(name='Мурзик')
+# murzik = Cat(name='Мурзик')
 
 for day in range(365):
     cprint('================== День {} =================='.format(day), color='red')
     serge.act()
     masha.act()
     kolya.act()
-    murzik.act()
+    # murzik.act()
     cprint(serge, color='cyan')
     cprint(masha, color='cyan')
     cprint(kolya, color='cyan')
-    cprint(murzik, color='cyan')
+    # cprint(murzik, color='cyan')
 
 
 # Усложненное задание (делать по желанию)
