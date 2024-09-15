@@ -43,6 +43,7 @@ from random import randint
 # Подвести итоги жизни за год: сколько было заработано денег, сколько сьедено еды, сколько куплено шуб.
 
 
+
 class House:
      # """""# Все они живут в одном доме, дом характеризуется:
 #   кол-во денег в тумбочке (в начале - 100)
@@ -52,6 +53,9 @@ class House:
         self.money = 100
         self.food = 50
         self.dirt = 0
+        self.total_money = 0
+        self.total_food = 0
+        self.total_coats = 0
 
     def __str__(self):
         return '=== В тайнике {} золотых, {} вкусностей в холодильнике, захламление {} % === '.format(
@@ -108,9 +112,11 @@ class Husband:
         if self.house.food >= 30:
             print('{} поел'.format(self.name))
             self.energy += 30
+            self.house.total_food += 30
             self.house.food -= 30
         elif self.house.food > 0 < 30:
             self.energy +=self.house.food
+            self.house.total_food += self.house.food
             self.house.food *= 0
             print('Без обид, но я - {}, я - доем'.format(self.name))
         else:
@@ -131,6 +137,7 @@ class Husband:
         print('{} сходил на работу'.format(self.name))
         self.house.money += 150
         self.energy -= 10
+        self.house.total_money += 150
 
     def gaming(self):
         print('{} поиграл катку в WoT'.format(self.name))
@@ -182,6 +189,7 @@ class Wife(Husband):
         if self.house.food >= 10:
             print('{} поела'.format(self.name))
             self.energy += 10
+            self.house.total_food += 10
             self.house.food -= 10
         super()
     def shopping(self):
@@ -197,6 +205,7 @@ class Wife(Husband):
     def buy_fur_coat(self):
         if self.house.money >= 350:
             print('{}: ура, смотри какая шуба!'.format(self.name))
+            self.house.total_coats +=1
             self.house.money -= 350
             self.joy += 60
         else:
@@ -226,6 +235,12 @@ for day in range(365):
     cprint(serge, color='cyan')
     cprint(masha, color='cyan')
     cprint(home, color='cyan')
+
+# Подвести итоги жизни за год: сколько было заработано денег, сколько сьедено еды, сколько куплено шуб.
+
+print('За год заработано', home.total_money)
+print('Съедено',home.total_food, 'вкусняшек')
+print('За год куплено',home.total_coats, 'шуб')
 
 # TODO после реализации первой части - отдать на проверку учителю
 
