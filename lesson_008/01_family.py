@@ -45,10 +45,6 @@ from random import randint
 
 
 class House:
-     # """""# Все они живут в одном доме, дом характеризуется:
-#   кол-во денег в тумбочке (в начале - 100)
-#   кол-во еды в холодильнике (в начале - 50)
-#   кол-во грязи (в начале - 0)"""""
     def __init__(self):
         self.money = 100
         self.food = 50
@@ -56,11 +52,9 @@ class House:
         self.total_money = 0
         self.total_food = 0
         self.total_coats = 0
-
     def __str__(self):
         return '=== В тайнике {} золотых, {} вкусностей в холодильнике, захламление {} % === '.format(
             self.money,self.food,self.dirt)
-
     def spoiling(self,other):
         self.dirt += 5
         other.joy -= 5
@@ -68,19 +62,13 @@ class House:
 
 
 class Husband:
-         # """" Муж может:есть, играть в WoT, ходить на работу"""""
     def __init__(self, name):
         self.name = name
         self.energy = 30
         self.joy = 100
         self.house = None
-
-
-        pass
-
     def __str__(self):
         return f'           {self.name}: сытость - {self.energy}, веселье - {self.joy}'
-
     def act(self):
         self.house.spoiling(self)
         if self.energy <= 0:
@@ -97,7 +85,6 @@ class Husband:
             self.work()
         elif self.joy < 35:
             self.gaming()
-
         else:
             dice = randint(1,6)
             if dice == 1:
@@ -106,8 +93,6 @@ class Husband:
                 self.gaming()
             else:
                 self.work()
-        pass
-
     def eat(self):
         if self.house.food >= 30:
             print('{} поел'.format(self.name))
@@ -128,17 +113,14 @@ class Husband:
                 self.eat()
             else:
                 self.gaming()
-
     def go_to_the_house(self, house):
         self.house = house
         print('{} Вьехал в дом'.format(self.name))
-
     def work(self):
         print('{} сходил на работу'.format(self.name))
         self.house.money += 150
         self.energy -= 10
         self.house.total_money += 150
-
     def gaming(self):
         print('{} поиграл катку в WoT'.format(self.name))
         self.energy -= 10
@@ -146,18 +128,8 @@ class Husband:
 
 
 class Wife(Husband):
-
-    #   есть,
-    #   покупать продукты,
-    #   покупать шубу,
-    #   убираться в доме,
-
-    # def __init__(self):
-    #     pass
-
     def __str__(self):
         return super().__str__()
-
     def act(self):
         self.house.spoiling(self)
         if self.energy <= 0:
@@ -184,14 +156,12 @@ class Wife(Husband):
                 self.eat()
             else:
                 self.clean_house()
-
     def eat(self):
         if self.house.food >= 10:
             print('{} поела'.format(self.name))
             self.energy += 10
             self.house.total_food += 10
             self.house.food -= 10
-        # super().eat()
     def shopping(self):
         if self.house.money >= 90:
             print('{} принесла покушать'.format(self.name))
@@ -203,8 +173,6 @@ class Wife(Husband):
             self.house.food += 30
         elif self.house.money < 90:
             print(f'{self.name} : где деньги? У нас есть не на что')
-
-
     def buy_fur_coat(self):
         if self.house.money >= 350:
             print('{}: ура, смотри какая шуба!'.format(self.name))
@@ -215,8 +183,6 @@ class Wife(Husband):
             self.eat()
             print('{}: кто, бы шубу купил... Ну хотябы поем'.format(self.name))
             self.eat()
-
-
     def clean_house(self):
         print('{}: нда, пора прибраться'.format(self.name))
         self.house.dirt -= 100
@@ -241,13 +207,13 @@ for day in range(365):
     cprint(masha, color='cyan')
     cprint(home, color='cyan')
 
-# Подвести итоги жизни за год: сколько было заработано денег, сколько сьедено еды, сколько куплено шуб.
+# Подвести итоги жизни за год: сколько было заработано денег, сколько съедено еды, сколько куплено шуб.
 
 print('За год заработано', home.total_money)
 print('Съедено',home.total_food, 'вкусняшек')
 print('За год куплено',home.total_coats, 'шуб')
 
-# TODO после реализации первой части - отдать на проверку учителю
+
 
 ######################################################## Часть вторая
 #
@@ -275,7 +241,9 @@ print('За год куплено',home.total_coats, 'шуб')
 
 
 class Cat:
-
+    # есть,
+    #   спать,
+    #   драть обои
     def __init__(self):
         pass
 
