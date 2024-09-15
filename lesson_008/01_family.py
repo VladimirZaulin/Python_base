@@ -230,29 +230,29 @@ class Wife(Husband):
             self.house.dirt = 0
 
 
-home = House()
-serge = Husband('Сережа')
-serge.go_to_the_house(home)
-masha = Wife(name='Маша')
-masha.go_to_the_house(home)
-
-for day in range(365):
-    cprint('================== День {} =================='.format(day), color='red')
-    serge.act()
-    masha.act()
-    if serge.act() or masha.act():
-        break
-    cprint(serge, color='cyan')
-    cprint(masha, color='cyan')
-    cprint(home, color='cyan')
-
-# Подвести итоги жизни за год: сколько было заработано денег, сколько сьедено еды, сколько куплено шуб.
-
-print('За год заработано', home.total_money)
-print('Съедено',home.total_food, 'вкусняшек')
-print('За год куплено',home.total_coats, 'шуб')
-
-# TODO после реализации первой части - отдать на проверку учителю
+# home = House()
+# serge = Husband('Сережа')
+# serge.go_to_the_house(home)
+# masha = Wife(name='Маша')
+# masha.go_to_the_house(home)
+#
+# for day in range(365):
+#     cprint('================== День {} =================='.format(day), color='red')
+#     serge.act()
+#     masha.act()
+#     if serge.act() or masha.act():
+#         break
+#     cprint(serge, color='cyan')
+#     cprint(masha, color='cyan')
+#     cprint(home, color='cyan')
+#
+# # Подвести итоги жизни за год: сколько было заработано денег, сколько сьедено еды, сколько куплено шуб.
+#
+# print('За год заработано', home.total_money)
+# print('Съедено',home.total_food, 'вкусняшек')
+# print('За год куплено',home.total_coats, 'шуб')
+#
+# # TODO после реализации первой части - отдать на проверку учителю
 
 ######################################################## Часть вторая
 #
@@ -310,8 +310,8 @@ print('За год куплено',home.total_coats, 'шуб')
 
 class Child(Husband):
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self,name):
+        super().__init__(name)
         self.joy = 100
     def __str__(self):
         return super().__str__()
@@ -345,9 +345,13 @@ class Child(Husband):
 
 home = House()
 serge = Husband(name='Сережа')
+serge.go_to_the_house(home)
 masha = Wife(name='Маша')
+masha.go_to_the_house(home)
 kolya = Child(name='Коля')
+kolya.go_to_the_house(home)
 # murzik = Cat(name='Мурзик')
+# serge.take_cat(home, basil) ---- тут надо взять кота домой
 
 for day in range(365):
     cprint('================== День {} =================='.format(day), color='red')
