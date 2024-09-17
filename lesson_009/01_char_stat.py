@@ -47,16 +47,28 @@ class LettersRating:
         self.total = sum(x)
         return self.total
 
+    def from_bigger_sorted(self):
+        self.stat_sorted = sorted(self.stat.items(), key=lambda x: -x[1])
+        return self.stat_sorted
+
+    def row_maker(self):
+        for a,b in self.stat_sorted:
+            rem = 10 - len(str(b)) - 3
+            x = rem*' '
+            print(f'|    {a}    |   {b}{x}|')
+
+
     def show_nice_tab(self):
 
-        print('+---------+----------+')
+        print(f'+{9*'-'}+{10*'-'}+')
         print('|  буква  | частота  |')
-        print('+---------+----------+')
-        self.stat_sorted = sorted(self.stat.items(), key=lambda x: x[1])
-        dict(self.stat_sorted)
-        pprint(self.stat_sorted)
-        print('+---------+----------+')
-        print(f'| итого | {self.total} |')
+        print(f'+{9*'-'}+{10*'-'}+')
+        self.from_bigger_sorted()
+        self.row_maker()
+        # pprint(self.stat_sorted)
+        print(f'+{9*'-'}+{10*'-'}+')
+        print(f'|  итого  |  {self.total} |')
+        print(f'+{9*'-'}+{10*'-'}+')
 
 
 book = LettersRating('python_snippets/voyna-i-mir.txt')
