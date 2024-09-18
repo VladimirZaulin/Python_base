@@ -21,27 +21,49 @@ from collections import Counter
 # Требования к коду: он должен быть готовым к расширению функциональности. Делать сразу на классах.
 
 file_name = 'events.txt'
-dates = []
-#find_noks
-with open(file_name,'r', encoding='cp1251') as file:
-    for line in file:
-        if 'NOK' in line:
-            dates.append(str(line[0:17]+']'))
-        else:
-            pass
-        # return dates
-#counter
-counted = Counter(dates)
-# pprint(counted)
+
+class LogParser:
+    def __init__(self, file_name):
+        self.dates = []
+        self.counted = None
+        self.filename = file_name
+
+
+    def find_noks(self):
+        with open(file_name,'r', encoding='cp1251') as file:
+            for line in file:
+                if 'NOK' in line:
+                    self.dates.append(line[0:17]+']')
+                else:
+                    pass
+        return self.dates
+    def counter(self):
+        self.counted = Counter(self.dates)
+    def form_pretty_output(self):
+        for items in self.counted:
+            print(items, self.counted.get(items))
+
+
+parser = LogParser(file_name)
+parser.find_noks()
+parser.counter()
+parser.form_pretty_output()
+
+
+
+
+
 
 #TODO group_by_hours
-
 #TODO group_by_months
-
+# group_by_hours = sorted(counted, key=lambda x: x[1])
+# counted = dict(counted)
 #TODO group_by_years
 
-# TODO pretty_output
-print(Counter(dates))
+
+
+
+
 
 # После выполнения первого этапа нужно сделать группировку событий
 #  - по часам
