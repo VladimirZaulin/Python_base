@@ -22,8 +22,8 @@ import os, time, shutil
 # Имя целевой папки - icons_by_year (тогда она не попадет в коммит)
 #
 # Пригодятся функции:
-#   os.walk
-#   os.path.dirname
+#   os.walk  --- описывает вложенные каталоги кортежами
+#   os.path.dirname ---
 #   os.path.join
 #   os.path.normpath
 #   os.path.getmtime
@@ -33,8 +33,60 @@ import os, time, shutil
 #
 # Чтение документации/гугла по функциям - приветствуется. Как и поиск альтернативных вариантов :)
 # Требования к коду: он должен быть готовым к расширению функциональности. Делать сразу на классах.
+count = 0
+class FileSorter:
+    def __init__(self):
+        self.files = dict()
+    def get_files(self):
+        for a,b,c in os.walk('icons'):
+            for file in c:
+                full_path = os.path.join(a,file)
+                secs = os.path.getmtime(full_path)
+                gen_time = time.gmtime(secs)
+                self.files[full_path] = gen_time[0:4]
+        # print(self.files)
 
-# TODO здесь ваш код
+    def sort_and_relocate(self, new_place='icons_by_year/'):
+        for keys in self.files:
+            years_list = str(self.files.get(keys)[0])
+            months_list = self.files.get(keys)[1]
+            if months_list == 12 or months_list == 11 or months_list == 10:
+                pass
+            else:
+                months_list = '0' + str(months_list)
+            # new_place = 'icons_by_year/'
+            way = os.path.join(new_place, years_list, str(months_list))
+            if os.path.exists(way):
+                pass
+            else:
+                os.makedirs(way)
+            # # print(keys, files.get(keys))
+            shutil.copy2(keys, way)
+
+
+icon_sorter = FileSorter()
+icon_sorter.get_files()
+icon_sorter.sort_and_relocate()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # Усложненное задание (делать по желанию)
 # Нужно обрабатывать zip-файл, содержащий фотографии, без предварительного извлечения файлов в папку.
