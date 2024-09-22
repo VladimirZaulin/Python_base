@@ -27,7 +27,7 @@ def triangle(point, angle=34, length=200):
 
     v3 = sd.get_vector(start_point=v2.end_point, angle=angle + 240, length=length, width=3)
     v3.draw()
-triangle(point,23, 160)
+# triangle(point,23, 160)
 #
 
 # - квадрата
@@ -65,8 +65,8 @@ def five_angles(point, angle=72, length=200):
     v4 = sd.get_vector(start_point=v3.end_point, angle=72 * 4 + real_angle, length=length, width=3)
     v4.draw()
 
-    v5 = sd.get_vector(start_point=v4.end_point, angle=72 * 5 + real_angle, length=length, width=3)
-    v5.draw()
+    v5 = sd.line(start_point=v4.end_point, end_point=point, width=3)
+
 
 
 five_angles(point, 142, 40)
@@ -89,11 +89,10 @@ def six_angles(point, angle=60, length=200):
     v5 = sd.get_vector(start_point=v4.end_point, angle=60 * 5  + real_angle, length=length, width=3)
     v5.draw()
 
-    v6 = sd.get_vector(start_point=v5.end_point, angle=60 * 6  + real_angle, length=length, width=3)
-    v6.draw()
+    v6 = sd.line(start_point=v5.end_point, end_point=point, width=3)
 
 
-six_angles(point, 24, 20)
+# six_angles(point, 24, 20)
 
 # Все функции должны принимать 3 параметра:
 # - точка начала рисования
