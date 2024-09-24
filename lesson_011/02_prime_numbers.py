@@ -42,7 +42,7 @@ class PrimeNumbers:
 
 
 
-# prime_number_iterator = PrimeNumbers(n=10000)
+prime_number_iterator = PrimeNumbers(n=10000)
 # for number in prime_number_iterator:
 #     print(number)
 
@@ -70,33 +70,35 @@ def prime_numbers_generator(n):
 #           727 -> 7(2)7 -> 7 == 7 -> True
 #           92083 -> 92(0)83 -> 9+2 == 8+3 -> True
 def is_happy(n):
+    num_str = str(n)
+    length = len(num_str)
+    half_length = length // 2
+
     if len(str(n)) % 2 == 0:
-        half_length = len(str(n)) / 2
-        left_half_length= sum(int(digit) for digit in str(n)[0:int(half_length)])
-        rights_half_length = sum(int(digit) for digit in str(n)[int(half_length):0])
-        if left_half_length == rights_half_length:
-            return True
-        else:
-            return False
-    elif len(str(n)) % 2 != 0:
-        half_length =(len(str(n))-1) / 2
-        left_half_length = sum(int(digit) for digit in str(n)[0:int(half_length)])
-        rights_half_length = sum(int(digit) for digit in str(n)[int(half_length):0])
-        if left_half_length == rights_half_length:
-            return True
-        else:
-            return False
+        left_half_sum = sum(int(digit) for digit in num_str[:half_length])
+        right_half_sum = sum(int(digit) for digit in num_str[half_length:])
+
     else:
-         return False
-ten_thou_simp_gen = prime_numbers_generator(n=10000)
+        left_half_sum = sum(int(digit) for digit in num_str[:half_length])
+        right_half_sum = sum(int(digit) for digit in num_str[half_length + 1:])
 
-res = filter(is_happy, ten_thou_simp_gen)
+    return left_half_sum == right_half_sum
 
-print(list(res))
+
+# ten_thou_simp_gen = prime_numbers_generator(n=10000)
+#
+#
+#
+# print(set(filter(is_happy, range(1,10000))))
 
 
 
 # 2) "палиндромное" - одинаково читающееся в обоих направлениях. Например 723327 и 101
+def is_palindrome(n):
+    str_text = str(n)
+    oppo_str = str_text[::-1]
+    return oppo_str == str_text
+print(list(filter(is_palindrome,prime_number_iterator)))
 # 3) придумать свою (https://clck.ru/GB5Fc в помощь)
 #
 # Подумать, как можно применить функции-фильтры к полученной последовательности простых чисел
