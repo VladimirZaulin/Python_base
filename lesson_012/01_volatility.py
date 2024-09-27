@@ -5,6 +5,8 @@ from collections import defaultdict
 from IPython.utils.coloransi import value
 from decorator import append
 
+from lesson_012.python_snippets.utils import time_track
+
 # Описание предметной области:
 #
 # При торгах на бирже совершаются сделки - один купил, второй продал.
@@ -117,8 +119,11 @@ class VolatReview:
         else:
             print('Нулевых волатильностей нет.')
 
+@time_track
+def main():
+    test = VolatReview(dir)
+    test.run()
+    test.output()
 
-test = VolatReview(dir)
-test.run()
-test.output()
+main()
 
