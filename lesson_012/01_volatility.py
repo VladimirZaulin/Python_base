@@ -97,35 +97,25 @@ class VolatReview:
                 average_price = (max_price + min_price) / 2
                 volat = ((max_price - min_price) / average_price) * 100
                 if volat != 0:
-                     self.vol_box[volat] = name[7:11]
+                     self.vol_box[name[7:11]] = volat
                 else:
-                    self.null_box[volat] = name[7:11]
+                    self.null_box[name[7:11]] = volat
     def output(self):
+        sorted_volatilities = sorted(self.vol_box.items(), key=lambda x: x[1], reverse=True)
+
         print('Максимальная волатильность:')
-        max_vol = dict()
-        i = 0
-        while i <3:
-            i +=1
-            _max = max(self.vol_box)
-            print(f' ТИКЕР{self.vol_box[_max]} - {_max}%')
-            # max_vol.append(_max)
-            self.vol_box.pop(_max)
+        for ticker, vol in sorted_volatilities[:3]:
+            print(f'    {ticker} - {vol:.4f} %')
 
-        print(f'{max_vol}')
+        print('Минимальная волатильность:')
+        for ticker, vol in sorted_volatilities[-3:]:
+            print(f'    {ticker} - {vol:.4f} %')
 
-        _min = min(self.vol_box)
-        print(f' ТИКЕР{self.vol_box[_min]} - {_min}%')
-        self.vol_box.pop(_min)
-        _min_2 = min(self.vol_box)
-        print(f' ТИКЕР{self.vol_box[_min_2]} - {_min}%')
-        self.vol_box.pop(_min_2)
-        _min_3 = min(self.vol_box)
-        print(f' ТИКЕР{self.vol_box[_min_3]} - {_min}%')
-        # print(f'{min_vol}')
         print('Нулевая волатильность:')
-        for key in self.null_box:
-            print(f' ТИКЕР{self.null_box[key]} - {key}%')
-
+        if self.null_box:
+            print(', '.join(sorted(self.null_box)))
+        else:
+            print('Нулевых волатильностей нет.')
 
 
 test = VolatReview(dir)
