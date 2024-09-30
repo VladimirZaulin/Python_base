@@ -1,10 +1,12 @@
 #!/usr/pycharmprojects/bot_env
 import vk_api
 from vk_api.bot_longpoll import VkBotLongPoll,VkBotEventType
-from _token import token
 from random import randint
 import logging
-
+try:
+    import settings
+except ImportError:
+    exit('DO cp settings.py.default settings.py and set token')
 
 
 group_id = 193037169
@@ -17,8 +19,9 @@ def configure_logging():
     log.addHandler(stream_handler)
 
     file_handler = logging.FileHandler("bot.log")
-    file_handler.setFormatter((logging.Formatter(fmt='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    datefmt='%Y-%m-%d %H:%M')))
+    file_handler.setFormatter((logging.Formatter(
+                        fmt='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+                        datefmt='%Y-%m-%d %H:%M')))
     log.addHandler(file_handler)
 
     log.setLevel(logging.DEBUG)
@@ -26,7 +29,15 @@ def configure_logging():
     file_handler.setLevel(logging.DEBUG)
 
 class Bot:
+    """
+    Echo bot for vk.com
+    Use python 3.12
+    """
     def __init__(self, group_id, token):
+        """
+        :param group_id: id from vk group
+        :param token: secret token
+        """
         self.group_id = group_id
         self.token = token
         self.vk = vk_api.VkApi(token=token)
@@ -34,13 +45,19 @@ class Bot:
         self.api = self.vk.get_api()
 
     def run(self):
-       for event in   self.long_poller.listen():
+        """ Запуск бота """
+        for event in  self.long_poller.listen():
            try:
                self.on_event(event)
            except Exception:
                log.exception("Ошибка в обработке события")
 
     def on_event(self, event):
+        """
+        Отправляет сообщение назад, если это текст.
+        :param event: VkBotMessageEvent
+        :return: None
+        """
         if event.type == VkBotEventType.MESSAGE_NEW:
             log.debug(f"отправляем ему: {event.object.message['text']}")
             self.api.messages.send(message=f'Это ты -- {event.object.message["text"]}🙂!',
@@ -52,5 +69,5 @@ class Bot:
 
 if __name__ == "__main__":
     configure_logging()
-    bot = Bot(group_id, token)
+    bot = Bot(settings.GROUP_ID, settings.TOKEN)
     bot.run()
