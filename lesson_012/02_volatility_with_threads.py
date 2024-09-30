@@ -74,8 +74,6 @@ class VolatReview(threading.Thread):
 
 @time_track
 def main():
-    guys = "Pinoccio", "JackSparrow", "Cheba"
-    for _ in guys:
         thread = VolatReview(dir)
     thread.start()
     for _ in guys:
