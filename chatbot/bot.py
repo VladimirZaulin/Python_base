@@ -24,7 +24,8 @@ class Bot:
     def on_event(self, event):
         if event.type == vk_api.bot_longpoll.VkBotEventType.MESSAGE_NEW:
             print(event.object.message['text'])
-            self.api.messages.send(message=event.object.message['text'], random_id = randint(0,2 **20),peer_id = event.object.message['peer_id'])
+            self.api.messages.send(message=f'Это ты -- {event.object.message["text"]}🙂!', random_id = randint(0,2 **20),
+                                   peer_id = event.object.message['peer_id'])
         else:
             print(f'Мы пока не умеет обрабатывать {event.type}')
 
