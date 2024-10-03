@@ -56,169 +56,153 @@ from unicodedata import decimal
 # 2.Перейти в другую локацию
 # 3.Выход
 
-remaining_time = '1234567890.0987654321'
-# если изначально не писать число в виде строки - теряется точность!
-field_names = ['current_location', 'current_experience', 'current_date']
+# -*- coding: utf-8 -*-
+
+
 
 class YouWin(Exception):
     pass
 
+
 class YouAreDead(Exception):
     pass
+
 
 class Player:
 
     def __init__(self, name):
         self.name = name
         self.exp = 0
-        self.tm = '1234567890.0987654321'
-        CONST_TM = Decimal('1234567890.0987654321')
-        self.passed_time = (CONST_TM - Decimal(self.tm))
+        self.tm = Decimal('1234567890.0987654321')
         self.location = None
 
     def go(self, location):
         self.location = location
-        dice = randint(1,4)
-        if dice == 1:
-            print(self.name, 'осторожно входит в', location)
-        if dice == 2:
-            print(self.name, 'устремляется в', location)
-        if dice == 3:
-            print(self.name, 'вышибает с ноги дверь в', location)
-        if dice == 4:
-            print(self.name, 'взламывает замок в', location)
+        dice = randint(1, 4)
+        actions = ['осторожно входит', 'устремляется в', 'вышибает с ноги дверь в', 'взламывает замок в']
+        print(f'{self.name} {actions[dice - 1]} {location}')
         tm_waste = re.search(r'tm(\d+)', location)
-        self.tm = Decimal(self.tm) - Decimal(tm_waste.group(1))
+        if tm_waste:
+            self.tm -= Decimal(tm_waste.group(1))
 
-    def state(self,):
+    def state(self):
         print(f'Вы находитесь в {self.location}')
         print(f'У вас {self.exp} опыта и осталось {self.tm} секунд')
-        self.passed_time = self.passed_time.quantize(Decimal("1.00"), ROUND_HALF_EVEN)
-        # Преобразуем Decimal в количество секунд (целое число)
-        seconds = int(self.passed_time)
-        # Преобразуем количество секунд в структуру времени
-        time_struct = gmtime(seconds)
-        # Форматируем время в строку HH:MM:SS
-        formatted_time = strftime('%H:%M:%S', time_struct)
-        # Выводим отформатированное время
+        seconds = int(Decimal('1234567890.0987654321') - self.tm)
+        formatted_time = strftime('%H:%M:%S', gmtime(seconds))
         print(f'Прошло уже {formatted_time}')
 
     def attack(self, monster):
-        print(self.name, 'атакует монстра', monster)
+        print(f'{self.name} атакует монстра {monster}')
         tm_waste = re.search(r'tm(\d+)', monster)
-        self.tm = str(Decimal(self.tm) - Decimal(tm_waste.group(1)))
-        add_exp = re.search(r'exp(\d+)_', monster)
-        self.exp = int(add_exp.group(1))
+        add_exp = re.search(r'exp(\d+)', monster)
+        if tm_waste and add_exp:
+            self.tm -= Decimal(tm_waste.group(1))
+            self.exp += int(add_exp.group(1))
+        else:
+            print("Ошибка данных о монстре!")
+
     def die(self):
-        while True:
-            if self.tm == 0 or self.tm is None:
-                raise YouAreDead
+        if self.tm <= 0:
+            raise YouAreDead
+
+
+
+def explore(current_location, location_content, previous_locations=None):
+    player.die()
+    if previous_locations is None:
+        previous_locations = []
+
+    monsters = [item for item in location_content if isinstance(item, str) and 'Mob' or 'Boss' in item]
+    boss = [item for item in location_content if isinstance(item, str) and 'Boss' in item]
+    locations = [item for item in location_content if isinstance(item, dict)]
+
+    print('Внутри вы видите:')
+    for monster in monsters:
+        if 'Mob' in monster:
+            print(f'-- Монстра {monster}')
+        elif 'Boss' in monster:
+            print(f'-- Босса {monster}')
+    for loc in locations:
+        for loc_name in loc:
+            print(f'-- Вход в локацию: {loc_name}')
+
+    print('Выберите действие:')
+    print('1. Атаковать монстра')
+    print('2. Перейти в другую локацию')
+    print('3. Вернуться назад')
+    print('4. Выход')
+
+    choice = input()
+
+    if choice == '1':
+        if monsters:
+            for idx, mons in enumerate(monsters, start=1):
+                print(f'{idx}. {mons}')
+            monster_choice = int(input('Выберите монстра: ')) - 1
+            if 0 <= monster_choice < len(monsters):
+                player.attack(monsters[monster_choice])
+                if str(monsters[monster_choice]) in location_content:
+                    print('Yff - хрип')
+                    location_content.pop(location_content.index(monsters[monster_choice]))
+
+
+
+                # Убираем монстра из текущей локации
+                player.state()
+            else:
+                print("Некорректный выбор.")
+        else:
+            print("Здесь нет монстров.")
+        explore(current_location, location_content, previous_locations)
+
+    elif choice == '2':
+        if locations:
+            for idx, loc in enumerate(locations, start=1):
+                for loc_name in loc:
+                    print(f'{idx}. {loc_name}')
+            loc_choice = int(input('Выберите локацию: ')) - 1
+            if 0 <= loc_choice < len(locations):
+                loc_name = list(locations[loc_choice].keys())[0]
+                player.go(loc_name)
+                previous_locations.append((current_location, location_content))  # Добавляем текущую локацию в историю
+                explore(loc_name, locations[loc_choice][loc_name], previous_locations)
+            else:
+                print("Некорректный выбор.")
+        else:
+            print("Здесь нет доступных путей.")
+        explore(current_location, location_content, previous_locations)
+
+    elif choice == '3':
+        if previous_locations:
+            prev_location, prev_content = previous_locations.pop()
+            player.go("возвращается назад")
+            explore(prev_location, prev_content, previous_locations)
+        else:
+            print("Некуда возвращаться.")
+        explore(current_location, location_content, previous_locations)
+
+    elif choice == '4':
+        print("Вы вышли из игры.")
+
+        quit()
+
+    else:
+        print("Некорректный ввод.")
+        explore(current_location, location_content, previous_locations)
 
 
 file_path = "/Users/dream9hacker/PycharmProjects/probe/Python_base/lesson_015/rpg.json"
 if os.path.exists(file_path):
     with open(file_path, 'r') as incoming_map:
-        map = json.load(incoming_map)
+        map_data = json.load(incoming_map)
 else:
     print(f"Ошибка: файл {file_path} не найден.")
 
-
-map_dict = dict(map)
-
-def explore(way, message=None, _ways=None, previous_location=None, beaten_mons=None):
-    global boss
-    if _ways is None:
-        _ways = []
-    if previous_location is None:
-        previous_location = []
-    if beaten_mons is None:
-        beaten_mons = []
-    if message is not None:
-        print(message)
-    monsters = []
-    _doors = 0
-    print('Внутри вы видите:')
-    for key in way:
-        if 'Mob' in key:
-            print(f'-- Монстра {key}')
-            monsters.append(key)
-        elif 'Loc' in key:
-            _doors += 1
-            _ways.append(key)
-            print(f'-- Вход в локацию:{key}')
-        elif 'Boss' in key:
-            print(f'-- Босса {key}')
-            boss = key
-    if _doors == 0 and len(monsters) == 1:
-        print('(можно прокрасться мимо)')
-
-    print('Выберите действие:')
-    print('1.Атаковать монстра')
-    print('2.Перейти в другую локацию')
-    print('3.Выход')
-    _input = input()
-    if _input == '1':
-        print(_ways)
-        if len(monsters) == 0:
-            print('тут нет монстров')
-            _input = input()
-        elif len(monsters) == 1:
-            # monster = monsters[0]
-            player.attack(monsters[0])
-            beaten_mons.extend(monsters)
-            player.state()
-            if 'Mob' in way[0]:
-                way[0] = 'corpse'
-            monsters.clear()
-            explore(way[1],message="МОНСТР УБИТ, ТЕПЕРЬ ВИДНО ДВЕРЬ", _ways=_ways, previous_location=previous_location)
-
-
-        elif len(monsters) > 1:
-            print('какого монстра побьем?')
-            for index, mons in enumerate(monsters, start=1):
-                print(index, mons)
-            try:
-                input_ = int(input())
-                if 0 < input_ <= len(monsters):
-                    player.attack(monsters[input_ - 1])
-                    beaten_mons.extend(monsters[input_ - 1])
-                else:
-                    print("Некорректный выбор монстра.")
-            except ValueError:
-                print("Введите число.")
-    if _input == '2':
-
-        if len(_ways) == 1:
-            previous_location.extend(way)
-            print(way[_ways[0]])
-            explore(way[_ways[0]],message="УДАЛОСЬ ЗАЙТИ В ДВЕРЬ", _ways=_ways, previous_location=previous_location)
-
-        elif len(_ways) == 0:
-            print('... Путь дальше завален, надо возвращаться...')
-            player.go(way)
-            explore(way,message="ОСТАЕМСЯ ТАМ ГДЕ И БЫЛИ", _ways=_ways, previous_location=previous_location)
-
-        elif len(_ways) > 1:
-            print('Какую дверь откроем?')
-            for index, door in enumerate(_ways, start=1):
-                print(index, door)
-            input_2 = input()
-            previous_location.extend(way)
-            player.go(way[_ways[int(input_2) - 1]])
-            explore(way[_ways[int(input_2) - 1]],message="ВЫБРАЛИ ДВЕРЬ", _ways=_ways, previous_location=previous_location)
-    elif _input == '3':
-        _path = previous_location[-1]
-        print(_path)
-        previous_location.remove(_path)
-        player.go(_path)
-        explore(_path,message="ПЕРЕХОДИМ НА ПРЕЖНЮЮ ПОЗИЦИЮ", _ways=_ways, previous_location=previous_location)
-
-
 player = Player('Вася')
-# print("!!!!"
-#       ,map["Location_0_tm0"][0])
+initial_location = "Location_0_tm0"
+explore(initial_location, map_data[initial_location].copy())
 
-explore(map.copy())
 
 
 # Учитывая время и опыт, не забывайте о точности вычислений!
